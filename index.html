@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shabu Buffet</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background: #f1f5f9;
+}
+
+header {
+  background: #d62828;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.menu {
+  max-width: 500px;
+  margin: auto;
+  padding-bottom: 120px;
+}
+
+.category {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.item {
+  background: white;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid black;
+}
+
+button {
+  background: #2a9d8f;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 60px;
+  margin-left: 5px;
+  transition: 0.15s;
+  cursor:pointer;
+}
+
+button:active{
+  transform: scale(0.93);
+}
+
+button:hover{
+  filter: brightness(1.1);
+  box-shadow: 0 0 12px rgba(0,0,0,.15);
+}
+
+.cart {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 500px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.item div {
+  display: flex;
+  gap: 5px;
+}
+
+.bth-group {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>🍲 ร้านชาบูตัวอย่าง</header>
+
+<div class="menu">
+
+  <div class="category">🥩 เนื้อ</div>
+  <div class="item">
+    <span>เนื้อสันนอก</span>
+    <div class="bth-group">
+    <button onclick="remove('เนื้อสันนอก')">-</button>
+    <button onclick="add('เนื้อสันนอก')">+</button>
+    </div>
+  </div>
+  <div class="item">
+    <span>เนื้อเสือร้องไห้</span>
+    <div class="bth-group">
+    <button onclick="remove('เนื้อเสือร้องไห้')">-</button>
+    <button onclick="add('เนื้อเสือร้องไห้')">+</button>
+    </div>
+  </div>
+  <div class="item">
+    <span>เนื้อสันใน</span>
+    <div class="bth-group">
+    <button onclick="remove('เนื้อสันใน')">-</button>
+    <button onclick="add('เนื้อสันใน')">+</button>
+    </div>
+  </div>
+
+  <div class="category">🥬 ผัก</div>
+  <div class="item">
+    <span>ผักกาด</span>
+    <div class="bth-group">
+    <button onclick="remove('ผักกาด')">-</button>
+    <button onclick="add('ผักกาด')">+</button>
+    </div>
+  </div>
+  <div class="item">
+    <span>เห็ดเข็มทอง</span>
+    <div class="bth-group">
+    <button onclick="remove('เห็ดเข็มทอง')">-</button>
+    <button onclick="add('เห็ดเข็มทอง')">+</button>
+    </div>
+  </div>
+
+  <div class="category">🥤 เครื่องดื่ม</div>
+  <div class="item">
+    <span>น้ำเปล่า</span>
+    <div class="bth-group">
+    <button onclick="remove('น้ำเปล่า')">-</button>
+    <button onclick="add('น้ำเปล่า')">+</button>
+    </div>
+  </div>
+  <div class="item">
+    <span>น้ำโค้ก</span>
+    <div class="bth-group">
+    <button onclick="remove('น้ำโค้ก')">-</button>
+    <button onclick="add('น้ำโค้ก')">+</button>
+    </div>
+  </div>
+  <div class="category">🍟 ของกินเล่น</div>
+  <div class="item">
+    <span>เฟรนซ์ฟราย</span>
+    <div class="bth-group">
+    <button onclick="remove('เฟรนซ์ฟราย')">-</button>
+    <button onclick="add('เฟรนซ์ฟราย')">+</button>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="cart">
+  <span id="list">ยังไม่ได้เลือก</span><br><br>
+  <input type="text" id="table" placeholder="ใส่เลขโต๊ะ" />
+  <button onclick="order()">สั่งอาหาร</button>
+</div>
+
+<script>
+let cart = {};
+
+function add(item){
+  if(cart[item]){
+    cart[item]++;
+  } else {
+    cart[item] = 1;
+  }
+  updateCart();
+}
+
+function remove(item){
+  if(cart[item]){
+    cart[item]--;
+
+    if(cart[item] <= 0){
+      delete cart [item];
+    }
+  }
+  updateCart();
+}
+
+function updateCart(){
+  let text = "";
+
+  for(let item in cart){
+    text += item + " x" + cart[item] + ", ";
+  }
+
+  if(text === ""){
+    text = "ยังไม่ได้เลือก";
+  }
+  document.getElementById("list").innerText = text;
+}
+
+function order(){
+  let table = document.getElementById("table").value;
+
+  if(table === ""){
+    alert("กรุณาใส่เลขโต๊ะก่อน");
+    return;
+  }
+
+  fetch("https://script.google.com/macros/s/AKfycbzy4d4Xd9qrLGsrzTRd1mioRfv4U42kmTkPK_8LOCniaUAdoGiYfUWcDPBTCBFP6pAk/exec", {
+    method: "post",
+    body: JSON.stringify({
+      table: table,
+      order: cart
+    })
+  })
+  .then(res => res.text())
+  .then(data => {
+    alert("สั่งอาหารเรียบร้อยแล้ว✅");
+    cart = {};
+    updateCart();
+  })
+  .catch(err => {
+    alert("ผิดพลาด❌");
+    console.log(err);
+  });
+}
+</script>
+
+</body>
+</html>
