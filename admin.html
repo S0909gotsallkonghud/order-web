@@ -77,9 +77,13 @@ button:active{
 
 <script>
 const URL = "https://script.google.com/macros/s/AKfycbzy4d4Xd9qrLGsrzTRd1mioRfv4U42kmTkPK_8LOCniaUAdoGiYfUWcDPBTCBFP6pAk/exec";
+let isLoading = false;
 let finishedOrders = new Set();
+let lastCount = -1;
 
 function loadOrders(){
+  if(isLoading) return;
+  isLoading = true;
   const oldScript = document.getElementById("jsonp");
   if(oldScript) oldScript.remove();
 
@@ -90,6 +94,17 @@ function loadOrders(){
 }
 
 function showData(data){
+  isLoading = false;
+  if(lastCount !== -1 && data.length > lastCount){
+
+    new Audio(
+      "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"
+    ).play();
+
+  }
+
+  lastCount = data.length;
+
   let html = "";
 
   if(!data || data.length === 0){
@@ -149,7 +164,7 @@ function finishOrder(rowNumber){
   });
 }
 
-setInterval(loadOrders,5000);
+setInterval(loadOrders,2000);
 loadOrders();
 </script>
 
